@@ -18,4 +18,5 @@ ENV FLASK_APP app.py
 
 EXPOSE 8080
 
+#ENTRYPOINT ["/bin/bash"]
 CMD ["python", "app.py"]

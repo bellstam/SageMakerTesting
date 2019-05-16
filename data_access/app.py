@@ -30,3 +30,5 @@ def predict():
     return Response(response=results_str, status=200, mimetype='text/csv')
 
 
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8080)
