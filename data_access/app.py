@@ -24,7 +24,7 @@ def predict():
     """
 
     results = pd.DataFrame({'ds': pd.date_range(start='2019-01-01', end='2019-01-31', freq='H'),
-                            'y_raw': np.random.lognormal(3, 1, 721)})
+                            'y': np.random.lognormal(3, 1, 721)})
     # format into a csv
     results_str = results.to_csv(index=False)
 
