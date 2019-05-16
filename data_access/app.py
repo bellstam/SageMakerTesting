@@ -1,7 +1,9 @@
 import flask
 from flask import Flask, Response
 import pandas as pd
-from io import StringIO
+import numpy as np
+
+
 app = Flask(__name__)
 
 
@@ -21,10 +23,10 @@ def predict():
     Do an inference on a single batch of data.
     """
 
-    #results = run_model(X_train)
-
+    results = pd.DataFrame({'ds': pd.date_range(start='2019-01-01', end='2019-01-31', freq='H'),
+                            'y_raw': np.random.lognormal(3, 1, 721)})
     # format into a csv
-    results_str = ",\n".join("sdlkfmaslkmfklsadf")#(results.astype('str'))
+    results_str = results.to_csv(index=False)
 
     # return
     return Response(response=results_str, status=200, mimetype='text/csv')
