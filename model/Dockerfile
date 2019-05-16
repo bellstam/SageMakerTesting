@@ -18,7 +18,8 @@ COPY "requirements.txt" .
 
 RUN pip install --upgrade setuptools
 RUN pip install --upgrade pip
-RUN pip install --trusted-host pypi.python.org -r requirements.txt --no-cache-dir --no-binary :all:
+RUN pip install --trusted-host pypi.python.org -r requirements.txt 
+RUN pip install --trusted-host pypi.python.org -r requirements_no_binary.txt --no-cache-dir --no-binary :all:
 
 RUN pip install -e .
 

@@ -10,4 +10,3 @@ boto3>=1.0.0
 cython==0.29.1
 matplotlib==3.0.2
 pystan==2.18.0.0
-fbprophet==0.4.post2
