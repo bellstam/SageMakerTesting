@@ -2,6 +2,7 @@ import flask
 from flask import Flask, Response
 import pandas as pd
 from io import StringIO
+from model import ProphetModel
 app = Flask(__name__)
 
 
@@ -21,7 +22,28 @@ def predict():
     Do an inference on a single batch of data.
     """
 
-    #results = run_model(X_train)
+    model_parameters = {'changepoint_prior_scale': 1,
+                    'seasonality_mode': 'multiplicative',
+                    'target_column': 'y_log',
+                    'seasonality': {
+                        'daily': {
+                            'period': 1,
+                            'fourier_order': 4,
+                            'prior_scale': 10
+                        },
+                        'weekly': {
+                            'period': 7,
+                            'fourier_order': 3,
+                            'prior_scale': 10
+                        },
+                        'monthly': {
+                            'period': 30.5,
+                            'fourier_order': 4,
+                            'prior_scale': 10
+                        }
+                    }}
+
+    m = ProphetModel(model_parameters)
 
     # format into a csv
     results_str = ",\n".join("sdlkfmaslkmfklsadf")#(results.astype('str'))
