@@ -4,6 +4,8 @@ FROM python:3.6
 RUN ["mkdir", "app"]
 WORKDIR "app"
 
+ADD . /app
+
 # install code dependencies
 COPY "requirements.txt" .
 
