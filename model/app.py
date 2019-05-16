@@ -1,10 +1,32 @@
-import flask
-from flask import Flask, Response
+from datetime import timedelta
+from flask import Flask, request, jsonify, Response
 import pandas as pd
-from io import StringIO
-from model import ProphetModel
+import io
+from models.prophet_model import ProphetModel
 app = Flask(__name__)
 
+
+forward_steps = 192
+model_parameters = {'changepoint_prior_scale': 1,
+                'seasonality_mode': 'multiplicative',
+                'target_column': 'y_log',
+                'seasonality': {
+                    'daily': {
+                        'period': 1,
+                        'fourier_order': 4,
+                        'prior_scale': 10
+                    },
+                    'weekly': {
+                        'period': 7,
+                        'fourier_order': 3,
+                        'prior_scale': 10
+                    },
+                    'monthly': {
+                        'period': 30.5,
+                        'fourier_order': 4,
+                        'prior_scale': 10
+                    }
+                }}
 
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -21,32 +43,22 @@ def predict():
     """
     Do an inference on a single batch of data.
     """
+    if request.method == 'POST':
+        if request.content_type == 'text/csv':
+            df = pd.read_csv(io.BytesIO(request.data), encoding='utf8')
+            m = ProphetModel(model_parameters)
+            m.model_object.fit(df)
+            last_valid_hour_utc = pd.to_datetime(df.tail(1)['ds'].values[0])
+            future = pd.DataFrame({'ds': pd.date_range(start=last_valid_hour_utc + timedelta(hours=1),
+                                                   end=last_valid_hour_utc + timedelta(hours=forward_steps),
+                                                   freq='H')})
+            # run prediction
+            results_str = m.model_object.predict(future).to_csv(index=False)
 
-    model_parameters = {'changepoint_prior_scale': 1,
-                    'seasonality_mode': 'multiplicative',
-                    'target_column': 'y_log',
-                    'seasonality': {
-                        'daily': {
-                            'period': 1,
-                            'fourier_order': 4,
-                            'prior_scale': 10
-                        },
-                        'weekly': {
-                            'period': 7,
-                            'fourier_order': 3,
-                            'prior_scale': 10
-                        },
-                        'monthly': {
-                            'period': 30.5,
-                            'fourier_order': 4,
-                            'prior_scale': 10
-                        }
-                    }}
+        else:
+            return Response(response='This predictor only supports CSV data', status=415, mimetype='text/plain')
 
-    m = ProphetModel(model_parameters)
 
-    # format into a csv
-    results_str = ",\n".join("sdlkfmaslkmfklsadf")#(results.astype('str'))
 
     # return
     return Response(response=results_str, status=200, mimetype='text/csv')
