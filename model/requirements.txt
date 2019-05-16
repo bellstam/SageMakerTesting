@@ -1,0 +1,11 @@
+urllib3<1.25
+Flask==0.12.3
+requests>=2.20.0
+websocket-client==0.47.0
+numpy==1.16.2
+pandas==0.24.2
+Flask-Cors==3.0.7
+botocore>=1.4.37
+boto3>=1.0.0
+pystan==2.18.0.0
+fbprophet==0.3.post2
