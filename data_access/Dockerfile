@@ -17,6 +17,7 @@ RUN pip install -e .
 ENV FLASK_APP app.py
 
 EXPOSE 8080
+LABEL com.amazonaws.sagemaker.capabilities.accept-bind-to-port=true
 
 #ENTRYPOINT ["/bin/bash"]
 CMD ["python", "app.py"]
